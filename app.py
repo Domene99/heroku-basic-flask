@@ -9,34 +9,18 @@ MAX_RETRIES = 10
 
 def pickNlpColor(colorname):
     COLOR_FORMAT_SCHEMA ="""
-    {
-    "type": "object",
-    "title": "Color Formats",
-    "properties": {
-        "hex": {
-        "type": "string",
-        "pattern": "^#[a-fA-F\\d]{3,6}$"
-        },
-        "rgb": {
-        "type": "array",
-        "minItems": 3,
-        "maxItems": 3,
-        "items": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
-        }
-        },
-        "hsl": {
-        "type": "array",
-        "minItems": 3,
-        "maxItems": 3,
-        "items": {
-            "type": "number"
-        }
-        }
-    }
-    }
+    title: Color Formats
+type: object
+properties:
+  hex:
+    type: string
+    pattern: "^#[a-fA-F\\d]{3,6}$"
+  rgb:
+    items:
+      type: number
+  hsl:
+    items:
+      type: number
     """
 
     CONTENT = "Give me the most likely rgb, hex, and hsl values for the phrase or word \" " + colorname  + " \" following the schema \"" + COLOR_FORMAT_SCHEMA + "\". Include no added commentary, explanation, confirmation or preamble in your response. Include only the json response"
