@@ -3,6 +3,7 @@ import json
 import openai
 import os
 import random
+from Color import *
 app = Flask(__name__)
 
 MAX_RETRIES = 10
@@ -55,6 +56,28 @@ properties:
 #     if number < 1:
 #         return mockNlpColor(colorname)
 #     return mockNlpColorNotValid(colorname)
+
+@app.route('/palette/<hexcolor>', methods=["GET"])
+def palette(hexcolor):
+    hex_color = request.view_args['hexcolor']
+    r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+    color = Color([r,g,b],"","")
+    complementary = complementaryColor(color)
+    triad = triadicColor(color)
+    split = splitComplementaryColor(color)
+    tetradic = tetradicColor(color)
+    analogous = analogousColor(color)
+    monochromatic = monochromaticColor(color)
+    result = {
+        "color": hexcolor,
+        "complementary": complementary,
+        "triad": triad,
+        "split": split,
+        "tetradic": tetradic,
+        "analogous": analogous,
+        "monochromatic": monochromatic
+        }
+    return jsonify(result), 200
 
 @app.route('/color/<colorname>', methods=["GET"])
 def nlpColorPicker(colorname):
