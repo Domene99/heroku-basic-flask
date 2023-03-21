@@ -85,7 +85,7 @@ def nlpColorPicker(colorname):
         try:
             # mock_response = json.loads(mockNlpColorMaybeValid(colorname))
             openai_response = pickNlpColor(colorname)
-            response = openai_response["choices"][0]["message"]["content"]
+            response = json.loads(openai_response["choices"][0]["message"]["content"])
             
         except ValueError:
             response = None
