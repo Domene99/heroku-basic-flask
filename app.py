@@ -2,10 +2,43 @@ from flask import Flask, request, Response, jsonify
 import json
 import openai
 import os
-import random
+import pdfplumber as pp
+import mindsdb_sdk as mdb
+import pandas as pd
+import os
 from Color import *
-from utils import *
 app = Flask(__name__)
+
+
+MDB_EMAIL=os.getenv('mdb')
+MDB_PWD=os.getenv('mdb-pass')
+MODEL_NAME=os.getenv('mdb-model')
+
+
+correct_schema = {
+  "hex": "#000000",
+  "rgb": [0, 0, 0],
+  "hsl": [0, 0, 0]
+}
+
+def verifyResponse(response):
+    result = True
+    if response is None:
+        return False
+    for key, value in correct_schema.items():
+        if key not in response:
+            result = False
+        if type(value) != type(response[key]):
+            result = False
+    return result
+
+def color_pick(text):
+    server=mdb.connect(login=MDB_EMAIL,password=MDB_PWD)
+    model=server.get_project('mindsdb')
+    query = model.query(f'select * from color_test_3 WHERE colorname = \'{text}\'')
+    response = query.fetch()
+    return response['color'][0]
+
 
 MAX_RETRIES = 10
     
